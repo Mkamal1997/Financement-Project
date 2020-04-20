@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col } from "antd";
+import Login from "./Login";
+import { Button } from "antd";
 import {
   Nav,
   Navbar,
@@ -8,14 +10,9 @@ import {
   Collapse,
   NavItem,
   Jumbotron,
-  Button,
   Modal,
   ModalHeader,
   ModalBody,
-  Form,
-  FormGroup,
-  Input,
-  Label
 } from "reactstrap";
 import { NavLink, Link } from "react-router-dom";
 
@@ -25,36 +22,22 @@ export default class Header extends Component {
 
     this.state = {
       isNavOpen: false,
-      isModalOpen: false
+      isModalOpen: false,
     };
     this.toggleNav = this.toggleNav.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
   }
 
   toggleNav() {
     this.setState({
-      isNavOpen: !this.state.isNavOpen
+      isNavOpen: !this.state.isNavOpen,
     });
   }
 
   toggleModal() {
     this.setState({
-      isModalOpen: !this.state.isModalOpen
+      isModalOpen: !this.state.isModalOpen,
     });
-  }
-
-  handleLogin(event) {
-    this.toggleModal();
-    alert(
-      "email: " +
-        this.email.value +
-        " Password: " +
-        this.password.value +
-        " Remember: " +
-        this.remember.checked
-    );
-    event.preventDefault();
   }
 
   render() {
@@ -70,7 +53,8 @@ export default class Header extends Component {
               <Nav navbar>
                 <NavItem>
                   <NavLink className="nav-link" to="/home">
-                    <span className="fa fa-home fa-lg"></span> <br/>HOME
+                    <span className="fa fa-home fa-lg"></span> <br />
+                    HOME
                   </NavLink>
                 </NavItem>
                 <NavItem>
@@ -89,6 +73,15 @@ export default class Header extends Component {
                   <NavLink className="nav-link" to="/contactus">
                     <span className="fa fa-address-card fa-lg"></span>
                     {"  "}ESPACE <br /> COMMUNICATION
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink className="nav-link" to="/depot">
+                    <span className="fas fa-upload">
+                      {" "}
+                      DEPOSER
+                      <br /> MA DAMANDE
+                    </span>
                   </NavLink>
                 </NavItem>
               </Nav>
@@ -119,9 +112,10 @@ export default class Header extends Component {
             <div className="row row-header">
               <div className="col-12 col-sm-6">
                 <h1>La Banque Centrale Populaire</h1>
-                <p >
+                <p>
                   La Banque Centrale Populaire vous accompagne pour le
-                   développement<br/> de vos idées innovantes.
+                  développement
+                  <br /> de vos idées innovantes.
                 </p>
               </div>
             </div>
@@ -131,39 +125,7 @@ export default class Header extends Component {
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
           <ModalBody>
-            <Form onSubmit={this.handleLogin}>
-              <FormGroup>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  type="text"
-                  id="email"
-                  name="email"
-                  innerRef={input => (this.email = input)}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  innerRef={input => (this.password = input)}
-                />
-              </FormGroup>
-              <FormGroup check>
-                <Label check>
-                  <Input
-                    type="checkbox"
-                    name="remember"
-                    innerRef={input => (this.remember = input)}
-                  />
-                  Remember me
-                </Label>
-              </FormGroup>
-              <Button type="submit" value="submit" color="primary">
-                Login
-              </Button>
-            </Form>
+            <Login />
           </ModalBody>
         </Modal>
       </div>

@@ -84,6 +84,9 @@ function About(props) {
 }
 
 export default About;
+
+
+
  /*   <div className="col-12">
           <Card>
             <CardBody className="bg-faded">

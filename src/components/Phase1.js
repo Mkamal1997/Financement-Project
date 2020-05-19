@@ -1,5 +1,9 @@
-import React from "react";
-import { Form, Col, Checkbox } from "antd";
+import React, { Component } from "react";
+import { Form, Col, Checkbox, Row, Button, Layout } from "antd";
+import { Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { Link } from "react-router-dom";
+import StepperD from "./StepperD";
+const { Content, Header } = Layout;
 
 const formItemLayout = {
   labelCol: {
@@ -33,26 +37,71 @@ const plainOptions = [
   "Commerce",
 ];
 
-function onChange(checkedValues) {
-  console.log("checked = ", checkedValues);
+export default class Phase1 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isFinished: false,
+      phase:1,
+    };
+  }
+
+  onFinish = () => {
+    this.setState({ isFinished: !this.state.isFinished });
+  };
+
+  render() {
+    return (
+      <div>
+        <Layout>
+          <Header></Header>
+          <Layout>
+            <Content>
+              <br />
+              <Row>
+                <Col span={24}>
+                  <Breadcrumb>
+                    <BreadcrumbItem>
+                      <Link to="/home">Home</Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem active>DEPOSER MA DEMANDE</BreadcrumbItem>
+                  </Breadcrumb>
+                </Col>
+                <Col>
+                  <StepperD phase={this.state.phase} />
+                </Col>
+                <Form {...formItemLayout} name="register">
+                  <Col
+                    xs={{ span: 5, offset: 1 }}
+                    lg={{ span: 24, offset: 10 }}
+                  >
+                    Phase 1 : Choisir un domaine
+                  </Col>
+                  <br /> <br />
+                  <Form.Item label="Domaine fonctionnel">
+                    <Checkbox.Group options={plainOptions} />
+                  </Form.Item>
+                </Form>
+                <br /> <br />
+              </Row>
+              <Row>
+                <Col offset={14}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login-form-button"
+                    onClick={() => {
+                      window.location = "/depotPhase2";
+                    }}
+                  >
+                    Passer à l'élément suivant
+                  </Button>
+                </Col>
+              </Row>
+            </Content>
+          </Layout>
+        </Layout>
+      </div>
+    );
+  }
 }
-const Phase1 = () => {
-  const [form] = Form.useForm();
-
-  return (
-    <div>
-      <Form {...formItemLayout} form={form} name="register">
-        <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 10 }}>
-          Phase 1 : Choisir un domaine
-        </Col>
-        <br /> <br />
-        <Form.Item label="Domaine fonctionnel">
-          <Checkbox.Group options={plainOptions} onChange={onChange} />
-        </Form.Item>
-      </Form>
-      <br /> <br />
-    </div>
-  );
-};
-
-export default Phase1;

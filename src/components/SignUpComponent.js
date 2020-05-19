@@ -4,13 +4,11 @@ import {
   Form,
   Input,
   Tooltip,
-  Cascader,
   Select,
   Row,
   Col,
   Checkbox,
   Button,
-  AutoComplete,
   Layout,
   DatePicker,
 } from "antd";
@@ -21,13 +19,8 @@ import { Link } from "react-router-dom";
 
 const { Content, Sider, Header } = Layout;
 const { Option } = Select;
-const AutoCompleteOption = AutoComplete.Option;
-const residences = [
-  {
-    value: "zhejiang",
-    label: "Zhejiang",
-  },
-];
+//const AutoCompleteOption = AutoComplete.Option;
+
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -93,7 +86,7 @@ const SignUp = () => {
     </Form.Item>
   );
 
-  const [autoCompleteResult, setAutoCompleteResult] = useState([]);
+  //const [autoCompleteResult, setAutoCompleteResult] = useState([]);
 
   return (
     <div>

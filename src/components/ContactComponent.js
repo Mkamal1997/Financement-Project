@@ -2,19 +2,7 @@ import React from "react";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { Link } from "react-router-dom";
 
-import { useHistory } from "react-router-dom";
-
 function Contact(props) {
-  /*const history = useHistory();
-  <div>
-    <i
-      className="icon list arrow left"
-      onClick={() => {
-        history.goBack();
-      }}
-    ></i>
-    ;
-  </div>; */
   return (
     <div className="container">
       <div className="row">

@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalBody,
 } from "reactstrap";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default class Header extends Component {
   constructor(props) {
@@ -81,6 +81,15 @@ export default class Header extends Component {
                       {" "}
                       DEPOSER
                       <br /> MA DAMANDE
+                    </span>
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink className="nav-link" to="/espaceChargéPrésélection">
+                    <span className="fas fa-upload">
+                      {" "}
+                      ESPACE
+                      <br /> PERSONNEL
                     </span>
                   </NavLink>
                 </NavItem>

@@ -8,7 +8,7 @@ export default class Phase3 extends Component {
     super(props);
     this.state = {
       isFinished: false,
-      phase:3,
+      phase: 3,
     };
   }
 

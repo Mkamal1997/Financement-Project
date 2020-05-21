@@ -51,6 +51,7 @@ export default class Phase0 extends Component {
   onClick = () => {
     if (this.state.isFinished) {
       window.location = "/depotPhase1";
+      
     }
   };
   onChange = (current) => {

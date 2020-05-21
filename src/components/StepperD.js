@@ -14,6 +14,9 @@ export default class SteperD extends Component {
   onChange = (current) => {
     this.setState({ current: this.props.phase });
   };
+  componentDidMount(){
+    this.onChange();
+  }
 
   render() {
     return (

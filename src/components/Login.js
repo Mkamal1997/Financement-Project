@@ -3,7 +3,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const Login = () => {
-  const onFinish = values => {
+  const onFinish = (values) => {
     console.log("Received values of form:", values);
   };
   return (
@@ -43,7 +43,14 @@ const Login = () => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
+        <Button
+          type="primary"
+          shape="round"
+          size="large"
+          htmlType="submit"
+          className="login-form-button"
+          id="bot1"
+        >
           Log in
         </Button>
         Or <a href="">register now!</a>

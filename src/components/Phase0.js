@@ -41,7 +41,7 @@ export default class Phase0 extends Component {
     super(props);
     this.state = {
       isFinished: false,
-      phase:0,
+      phase: 0,
     };
   }
 
@@ -51,7 +51,6 @@ export default class Phase0 extends Component {
   onClick = () => {
     if (this.state.isFinished) {
       window.location = "/depotPhase1";
-      
     }
   };
   onChange = (current) => {
@@ -91,7 +90,7 @@ export default class Phase0 extends Component {
               </Col>
               <Row>
                 <Col>
-                  <StepperD phase={this.state.phase}/>
+                  <StepperD phase={this.state.phase} />
                 </Col>
                 <Col xs={{ span: 5, offset: 1 }} lg={{ span: 14, offset: 10 }}>
                   Phase 0 : Informations sur le porteur de projet

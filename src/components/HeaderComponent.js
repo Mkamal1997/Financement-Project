@@ -14,7 +14,8 @@ import {
   ModalHeader,
   ModalBody,
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+
 
 export default class Header extends Component {
   constructor(props) {
@@ -39,97 +40,85 @@ export default class Header extends Component {
       isModalOpen: !this.state.isModalOpen,
     });
   }
-
+  
   render() {
+
+   
     return (
-      <div>
-        <Navbar dark expand="md">
-          <div className="container">
+      <div >
+        <Navbar light expand="md" className="navbar fixed-top">
+          
             <NavbarToggler onClick={this.toggleNav} />
-            <NavbarBrand className="mr-auto" href="/">
-              <img src="assets/bcp1.png" height="80" width="111" alt="BCP" />
+            <NavbarBrand className="mr-auto navbar-brand" href="/" id="log">
+              <img src="assets/logo.png" height="60" width="170" alt="BCP" />
             </NavbarBrand>
+        
             <Collapse isOpen={this.state.isNavOpen} navbar>
+           
               <Nav navbar>
-                <NavItem>
-                  <NavLink className="nav-link" to="/home">
-                    <span className="fa fa-home fa-lg"></span> <br />
-                    HOME
+                <NavItem id="navPos">
+                  <NavLink className="nav-link" to="/home" >
+                  &nbsp; &nbsp; HOME
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem id="navPos">
                   <NavLink className="nav-link" to="/about">
-                    <span className="fa fa-info fa-lg"></span> NOUS <br />{" "}
-                    CONNAÎTRE
+                  &nbsp; &nbsp; NOUS CONNAÎTRE
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem id="navPos">
                   <NavLink className="nav-link" to="/projectsMenu">
-                    <span className="fa fa-list fa-lg"></span> NOS <br />{" "}
-                    PROJETS
+                  &nbsp; &nbsp; NOS PROJETS
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem id="navPos">
                   <NavLink className="nav-link" to="/contactus">
-                    <span className="fa fa-address-card fa-lg"></span>
-                    {"  "}ESPACE <br /> COMMUNICATION
+                  &nbsp; &nbsp;  ESPACE COMMUNICATION
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem id="navPos">
                   <NavLink className="nav-link" to="/depot">
-                    <span className="fas fa-upload">
-                      {" "}
-                      DEPOSER
-                      <br /> MA DAMANDE
-                    </span>
+                  &nbsp; &nbsp;  DEPOSER MA DAMANDE
+                    
                   </NavLink>
                 </NavItem>
-                <NavItem>
+                <NavItem id="navPos">
                   <NavLink className="nav-link" to="/espaceChargéPrésélection">
-                    <span className="fas fa-upload">
-                      {" "}
-                      ESPACE
-                      <br /> PERSONNEL
-                    </span>
+                  &nbsp; &nbsp;  ESPACE PERSONNEL
+                    
                   </NavLink>
                 </NavItem>
               </Nav>
-            </Collapse>
+            
 
-            <Nav className="ml-auto" navbar>
+            <Nav className="ml-auto " navbar>
+              
               <Row>
                 <Col span={11}>
-                  <NavItem>
-                    <Button outline onClick={this.toggleModal}>
-                      <span className="fa fa-sign-in fa-lg"></span> Login
+                  <NavItem className="js-scroll-trigger">
+                    <Button outline onClick={this.toggleModal} className="buttom" type="primary" shape="round" size="large" id="bot1">
+                      <span ></span>&nbsp; &nbsp;Login&nbsp; &nbsp;
                     </Button>
                   </NavItem>
                 </Col>
+                
                 <Col span={11} offset={2}>
-                  <NavItem>
-                    <NavLink className="fa fa-sign-up fa-lg" to="/signUp">
-                      <span></span> <Button outline>Sign up</Button>
+                  <NavItem className="js-scroll-trigger">
+                    <NavLink className="fa fa-sign-up fa-lg  " to="/signUp">
+                      <span></span> <Button outline className="buttom " type="primary" shape="round" size="large"  id="bot2">Sign up</Button>
                     </NavLink>
                   </NavItem>
                 </Col>
-              </Row>
+                </Row>  
             </Nav>
-          </div>
+            </Collapse>
+            &nbsp; &nbsp;
         </Navbar>
-        <Jumbotron>
-          <div className="container">
-            <div className="row row-header">
-              <div className="col-12 col-sm-6">
-                <h1>La Banque Centrale Populaire</h1>
-                <p>
-                  La Banque Centrale Populaire vous accompagne pour le
-                  développement
-                  <br /> de vos idées innovantes.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Jumbotron>
+        
+       
+
+  
+
 
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
@@ -138,6 +127,8 @@ export default class Header extends Component {
           </ModalBody>
         </Modal>
       </div>
+      
     );
+    
   }
 }

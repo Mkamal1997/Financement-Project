@@ -1,7 +1,22 @@
 import React, { Component } from "react";
-import { Form, Col, Input, Layout, Button } from "antd";
+import { Row, Col, Layout } from "antd";
+import {
+  Card,
+  Form,
+  Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  FormGroup,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Input,
+} from "reactstrap";
 import StepperD from "./StepperD";
+import { Link } from "react-router-dom";
+import axios from "axios";
 const { Content, Header } = Layout;
+
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -24,18 +39,47 @@ export default class Phase4 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFinished: false,
-      phase: 4,
+      lieu: "",
+      budget: "",
+      apport_personnel: "",
+      financement_sollicité: "",
+      phase: 2,
     };
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
-  onClick = () => {
-    if (this.state.isFinished) {
-      window.location = "/depotPhase5";
-    }
+  initialState = {
+    lieu: "",
+    budget: "",
+    apport_personnel: "",
+    financement_sollicité: "",
   };
-  onFinish = () => {
-    this.setState({ isFinished: !this.state.isFinished });
+
+  onSubmit = (event) => {
+    event.preventDefault();
+    const detail = {
+      lieu: this.state.lieu,
+      budget: this.state.budget,
+      apport_personnel: this.state.apport_personnel,
+      financement_sollicité: this.state.financement_sollicité,
+    };
+    axios
+      .post("http://localhost:8080/api/demandes", detail)
+      .then((response) => {
+        if (response.data != null) {
+          this.setState(this.initialState);
+          alert("Detail Saved Succesfully");
+          window.location = "/depotPhase5";
+        }
+      });
   };
+  reset = () => {
+    this.setState(() => this.initialState);
+  };
+  onChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
   render() {
     return (
       <Layout>
@@ -47,75 +91,105 @@ export default class Phase4 extends Component {
                 Phase 4 : Donner plus de details sur votre projet
               </Col>{" "}
               <br />
+              <Col span={24}>
+                <Breadcrumb>
+                  <BreadcrumbItem>
+                    <Link to="/home">Home</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem active>DETAILS SUPPLEMENTAIRE</BreadcrumbItem>
+                </Breadcrumb>
+              </Col>
               <Col>
                 <StepperD phase={this.state.phase} />
               </Col>
-              <Form
-                {...formItemLayout}
-                name="register"
-                onFinish={this.onFinish}
-                scrollToFirstError
-              >
-                <Form.Item
-                  label="Lieu d'implantation du projet"
-                  name="Lieu d'implantation du projet"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Entrez SVP le Lieu d'implantation du projet!",
-                    },
-                  ]}
+              <Card className="border border-dark bg-dark text-white">
+                <CardHeader></CardHeader>
+                <Form
+                  onReset={this.reset}
+                  onSubmit={this.onSubmit}
+                  onChange={this.onChange}
                 >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Estimation du coût global du projet"
-                  name="Estimation du coût global du projet"
-                  rules={[
-                    {
-                      required: true,
-                      message:
-                        "Entrez SVP l'Estimation du coût global du projet'!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="$$" />
-                </Form.Item>
-                <Form.Item
-                  label="Apport personnel"
-                  name="Apport personnel"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Entrez SVP votre Apport personnel!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="$$" />
-                </Form.Item>
-                <Form.Item
-                  label="Financement sollicité"
-                  name="Financement sollicité"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Entrez SVP le Financement sollicité!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="$$" />
-                </Form.Item>
-                <Col offset={14}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="login-form-button"
-                    onClick={this.onClick}
-                  >
-                    Passer à l'élément suivant
-                  </Button>
-                </Col>
-              </Form>
+                  <CardBody>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          <label>Lieu d'implantation du projet</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="lieu"
+                            value={this.state.lieu}
+                            onChange={this.onChange}
+                            className={"bg-dark text-white"}
+                            placeholder="Enter le lieu d'implantation de votre projet "
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          <label>Estimation du coût global du projet</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="budget"
+                            value={this.state.budget}
+                            onChange={this.onChange}
+                            className={"bg-dark text-white"}
+                            placeholder="Enter le Budget nécessaire "
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          <label>Apport personnel</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="apport_personnel"
+                            value={this.state.apport_personnel}
+                            onChange={this.onChange}
+                            className={"bg-dark text-white"}
+                            placeholder="Entrez votre Apport personnel! "
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          <label>Financement Sollicité</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="financement_sollicité"
+                            value={this.state.financement_sollicité}
+                            onChange={this.onChange}
+                            className={"bg-dark text-white"}
+                            placeholder="Entrez votre Financement Sollicité! "
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                  <CardFooter style={{ textAlign: "right" }}>
+                    <Button size="sm" variant="success" type="submit">
+                      ADD
+                    </Button>
+                    {"    "}
+                    <Button size="sm" variant="info" type="reset">
+                      reset
+                    </Button>
+                  </CardFooter>
+                </Form>
+              </Card>
             </div>
           </Content>
         </Layout>

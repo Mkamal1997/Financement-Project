@@ -8,7 +8,7 @@ export default class Phase5 extends React.Component {
     super(props);
     this.state = {
       isFinished: false,
-      phase: 5,
+      phase: 3,
     };
   }
   render() {

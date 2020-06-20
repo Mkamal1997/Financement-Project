@@ -9,12 +9,10 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Row, Col, Checkbox, Layout, Collapse } from "antd";
-import Phase3 from "./Phase3";
+import axios from "axios";
 const { Content, Header, Footer } = Layout;
 const { Panel } = Collapse;
 const CheckboxGroup = Checkbox.Group;
-const defaultCheckedList = [];
-
 const plainOptions = [
   "Motivation et engagement à entreprendre",
   "Disposer d’un bon profil entrepreneurial",
@@ -24,29 +22,23 @@ const plainOptions = [
   "projet faisable et viable sur le plan commercial,technique et financier",
   "le projet respecte l’environnement",
 ];
-
+const defaultCheckedList = [];
 export default class EspaceCP extends Component {
   constructor(props) {
     super(props);
     this.state = {
       demandes: [],
+      isLoading: false,
       checkedList: defaultCheckedList,
       indeterminate: true,
       checkAll: false,
+      isDisabled: false,
     };
   }
 
   componentDidMount() {
     this.getAllDemandes();
-  }
-
-  getAllDemandes() {
-    fetch("http://localhost:8080/api/demandes")
-      .then((response) => response.json())
-      .then((demande) => {
-        this.setState({ demandes: demande });
-      })
-      .catch((error) => console.error("error :" + error));
+    this.setState({ isLoading: true });
   }
   onChange = (checkedList) => {
     this.setState({
@@ -56,7 +48,6 @@ export default class EspaceCP extends Component {
       checkAll: checkedList.length === plainOptions.length,
     });
   };
-
   onCheckAllChange = (e) => {
     this.setState({
       checkedList: e.target.checked ? plainOptions : [],
@@ -64,6 +55,45 @@ export default class EspaceCP extends Component {
       checkAll: e.target.checked,
     });
   };
+
+  onClick = () => {
+    const demande = { statut_av: "Detail" };
+    this.setState({ isDisabled: true });
+    if (this.state.checkAll) {
+      alert(
+        "vous avez validé cette demande, une notification est envoyé au client: " +
+          `${this.state.demandes.clientNom}` +
+          " " +
+          `${this.state.demandes.clientPrénom}` +
+          " pour l'informer"
+      );
+      axios
+        .put("http://localhost:8080/api/demandes/{1}", demande)
+        .then((response) => {
+          if (response.data != null) {
+            alert(" Updated Succesfully");
+            console.log(response.data);
+          }
+        });
+    } else {
+      alert(
+        "Un avis est envoyé au client pour lui demander de compléter ça demande"
+      );
+    }
+  };
+  getAllDemandes() {
+    fetch("http://localhost:8080/api/demandes")
+      .then((response) => response.json())
+      .then((demande) => {
+        this.setState({ demandes: demande, isLoading: false });
+      })
+      .catch((error) => console.error("error :" + error));
+  }
+
+  /* updateDemande() {
+    fetch("http://localhost:8080/api/demandes/{1}");
+  }
+  */
 
   render() {
     return (
@@ -91,7 +121,7 @@ export default class EspaceCP extends Component {
                 </Col>
 
                 <Col xs={{ span: 5, offset: 1 }} lg={{ span: 20, offset: 2 }}>
-                  <Collapse defaultActiveKey={["1"]}>
+                  <Collapse>
                     {this.state.demandes.map((demande) => (
                       <Panel
                         header={`Demande ${demande.id_idée}`}
@@ -137,22 +167,33 @@ export default class EspaceCP extends Component {
                             </Card>
                           </Col>
                           <Col>
-                            <div className="site-checkbox-all-wrapper">
-                              <Checkbox
-                                indeterminate={this.state.indeterminate}
-                                onChange={this.onCheckAllChange}
-                                checked={this.state.checkAll}
-                              >
-                                Check all
-                              </Checkbox>
+                            <div>
+                              <div className="site-checkbox-all-wrapper">
+                                <Checkbox
+                                  indeterminate={this.state.indeterminate}
+                                  onChange={this.onCheckAllChange}
+                                  checked={this.state.checkAll}
+                                  disabled={this.state.isDisabled}
+                                >
+                                  Check all
+                                </Checkbox>
+                                <button
+                                  onClick={this.onClick}
+                                  disabled={this.state.isDisabled}
+                                >
+                                  Valider
+                                </button>
+                              </div>
+
+                              <br />
+                              <br />
+                              <CheckboxGroup
+                                options={plainOptions}
+                                value={this.state.checkedList}
+                                onChange={this.onChange}
+                                disabled={this.state.isDisabled}
+                              />
                             </div>
-                            <br />
-                            <br />
-                            <CheckboxGroup
-                              options={plainOptions}
-                              value={this.state.checkedList}
-                              onChange={this.onChange}
-                            />
                           </Col>
                         </Row>
                       </Panel>

@@ -1,38 +1,119 @@
 import React, { Component } from "react";
-import { Menu, Button, Dropdown, Row, Col } from "antd";
+import { Select, DatePicker, Layout, Menu, Dropdown } from "antd";
+import {
+  Card,
+  Form,
+  Button,
+  Col,
+  Row,
+  FormGroup,
+  CardBody,
+  CardFooter,
+  Breadcrumb,
+  BreadcrumbItem,
+  CardHeader,
+  Input,
+} from "reactstrap";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import StepperD from "./StepperD";
+import { DownOutlined } from "@ant-design/icons";
+import Footer1 from "./Footer";
+const { Content, Header, Footer } = Layout;
+const { Option } = Select;
 
 export default class Phase1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      nom: "",
+      prénom: "",
+      formation: "",
+      diplome: "",
+      cin: "",
+      num_tel: "",
+      adresse: "",
+      email: "",
+      motivation: "",
+      date_de_naissance: "",
+      lieu_de_naissance: "",
+      situation_familiale: "",
+      isFinished: false,
+      descriptif: "",
+      intitulé_projet: "",
+      phase: 0,
+      domaines: [],
+      indeterminate: true,
+      isDisabled: false,
+      isDisabledDP: false,
       visible: false,
       domaines: [],
-      domaineSelected: "",
-      isDisabled: false,
+      domaine: "",
     };
-    this.onClick = this.onClick.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.changeHandler = this.changeHandler.bind(this);
+    this.onClickDP = this.onClickDP.bind(this);
   }
-  onClick = ({ key }) => {
-    this.setState(
-      {
-        domaineSelected: this.state.domaines[key - 1].domaine,
-        isDisabled: true,
+
+  initialState = {
+    nom: "",
+    prénom: "",
+    formation: "",
+    diplome: "",
+    cin: "",
+    num_tel: "",
+    adresse: "",
+    lieu_de_naissance: "",
+    email: "",
+    motivation: "",
+    date_de_naissance: "",
+    situation_familiale: "",
+    descriptif: "",
+    intitulé_projet: "",
+    domaine: "",
+  };
+  onSubmit = (event) => {
+    event.preventDefault();
+    const demande = {
+      client: {
+        nom: this.state.nom,
+        prénom: this.state.prénom,
+        formation: this.state.formation,
+        diplome: this.state.diplome,
+        cin: this.state.cin,
+        num_tel: this.state.num_tel,
+        adresse: this.state.adresse,
+        lieu_de_naissance: this.state.lieu_de_naissance,
+        email: this.state.email,
+        motivation: this.state.motivation,
+        date_de_naissance: this.state.date_de_naissance,
+        situation_familiale: this.state.situation_familiale,
+        role: "Client",
       },
-      () => {
-        const demande = { domaine: this.state.domaineSelected };
-        axios
-          .post("http://localhost:8080/api/demandes", demande)
-          .then((response) => {
-            if (response.data != null) {
-              this.setState(this.initialState);
-              alert("Demande Saved Succesfully");
-              console.log(response.data);
-              /* window.location = "/depotPhase1";*/
-            }
-          });
-      }
-    );
+      statut_av: "Tri",
+      //domaine: this.state.domaine,
+      descriptif: this.state.descriptif,
+      intitulé_projet: this.state.intitulé_projet,
+    };
+
+    axios
+      .post("http://localhost:8080/api/demandes", demande)
+      .then((response) => {
+        if (response.data != null) {
+          this.setState(this.initialState);
+          alert("Client and Demande Saved Succesfully");
+          console.log(response.data);
+          window.location = "/depot2";
+        }
+      });
+  };
+  //
+  onClickDP = ({ key }) => {
+    this.setState({
+      domaine: this.state.domaines[key - 1].domaine,
+      // isDisabledDP: true,
+    });
+    //console.log(this.state.domaine);
   };
   handleDisable = () => {
     this.setState({});
@@ -51,366 +132,294 @@ export default class Phase1 extends Component {
       })
       .catch((error) => console.error("error :" + error));
   }
+
+  changeHandler = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+  onChange = (date) => {
+    this.setState({ date_de_naissance: date.format() });
+  };
+
+  onClick = () => {
+    this.setState({ isDisabled: true });
+  };
+
+  onClickButton = () => {
+    this.setState({ isDisabled: false, domaine: "" });
+  };
+  onClickSituation = ({ key }) => {
+    this.setState({ situation_familiale: key });
+  };
+
   render() {
     const menu = this.state.domaines.map((item) => (
       <Menu.Item key={item.id_domaine}>{item.domaine}</Menu.Item>
     ));
-    return (
-      <Row>
-        <Col>
-          <Dropdown
-            disabled={this.state.isDisabled}
-            overlay={<Menu onClick={this.onClick}> {menu}</Menu>}
-            onVisibleChange={this.handleVisibleChange}
-            visible={this.state.visible}
-            trigger={["click"]}
-          >
-            <a className="ant-dropdown-link">Domaine Fonctionnel</a>
-          </Dropdown>
-        </Col>
-      </Row>
+    const menuSituation = (
+      <Menu onClick={this.onClickSituation} required>
+        <Menu.Item key="Célibataire">Célibataire</Menu.Item>
+        <Menu.Item key="Marié(e)">Marié(e)</Menu.Item>
+        <Menu.Item key="Divorcé(e)">Divorcé(e)</Menu.Item>
+      </Menu>
     );
-  }
-}
 
-/*
-
-
-
-const onloadOptions = [
-  { label: "Sport", value: "Sport" },
-  { label: "Computer Science", value: "Computer Science" },
-  { label: "Agriculture", value: "Agriculture" },
-  { label: "High Tech", value: "High Tech" },
-  { label: "Ingénierie", value: "Ingénierie" },
-]; 
-
-export default class Phase1 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checkedList: [],
-      indeterminate: true,
-      isDisabled: false,
-      domaines: [],
-    };
-  }
-  componentDidMount() {
-    this.getAllDomaines();
-  }
-  getAllDomaines() {
-    fetch("http://localhost:8080/api/domaines")
-      .then((response) => response.json())
-      .then((domaine) => {
-        this.setState({ domaines: domaine });
-        console.log(this.state.domaines[0]);
-      })
-      .catch((error) => console.error("error :" + error));
-  }
-  onClick = (e) => {
-    this.setState({ isDisabled: true });
-  };
-  onCheck = (e) => {
-    const values = onloadOptions.map((record) => record.value);
-    this.setState({
-      checkedList: e.target.checked ? values : [],
-    });
-  };
-
-  onGroupChange = (checkedList) => {
-    this.setState({
-      checkedList,
-    });
-  };
-  onClickButton = () => {
-    this.setState({ isDisabled: false, checkedList: [] });
-  };
-
-  render() {
-    return (
-      <div>
-        <Checkbox.Group
-          options={onloadOptions}
-          onChange={this.onGroupChange}
-          disabled={this.state.isDisabled}
-          value={this.state.checkedList}
-          onClick={this.onClick}
-          style={{ width: "100%", marginLeft: "15%", fontWeight: "dark" }}
-        ></Checkbox.Group>
-        <Button onClick={this.onClickButton}>Changer le Domaine</Button>
-      </div>
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const plainOptions = [
-  "Technologie",
-  "Sport",
-  "Computer Science",
-  "Agriculture",
-  "High Tech",
-  "Medecine",
-  "Ingénierie",
-  "E-commerce",
-  "Aéronautique",
-  "Automobile",
-  "Commerce",
-];
-const defaultCheckedList = [];
-export default class Phase1 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checkedList: defaultCheckedList,
-      indeterminate: true,
-      isDisabled: false,
-      isChecked: "",
-    };
-  }
-  onChange = (checkedList) => {
-    this.setState({
-      checkedList,
-      indeterminate:
-        !!checkedList.length && checkedList.length < plainOptions.length,
-      // checkAll: checkedList.length === plainOptions.length,
-    });
-  };
-  onCheck = (e) => {
-    const values = plainOptions;
-    this.setState({ checkedList: e.target.checked ? values : [] });
-  };
-  onClick = (e) => {
-    this.setState({ isDisabled: true, isClicked: e.target.checked });
-    //this.setState({selected:e.target.checked})
-    console.log(this.state.isClicked);
-    alert(
-      "vous avez validé cette demande, une notification est envoyé au client: " +
-        `${this.props.clientNom}` +
-        " " +
-        `${this.props.clientPrénom}` +
-        " pour l'informer"
-    );
-  };
-
-  render() {
-    return (
-      <div>
-        <br />
-        <br />
-        <CheckboxGroup
-          style={{ width: "100%", marginLeft: "5%", fontWeight: "lighter" }}
-          options={plainOptions}
-          value={this.state.checkedList}
-          onChange={this.onChange}
-          disabled={this.state.isDisabled}
-          onClick={this.onClick}
-          checked={this.state.isChecked}
-        />
-      </div>
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 8,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 10,
-    },
-  },
-};
-
-const plainOptions = [
-  "Santé",
-  "Agriculture",
-  "Technologie",
-  "Médecine",
-  "Industrie",
-  "Ingénierie",
-  "E-commerce",
-  "Aéronautique",
-  "Automobile",
-  "Commerce",
-];
-
-
-
-
-
-
-
-
-
- <Form {...formItemLayout} name="register">
-                  <Col
-                    xs={{ span: 5, offset: 1 }}
-                    lg={{ span: 24, offset: 10 }}
-                  >
-                    Phase 1 : Choisir un domaine
-                  </Col>
-                  <br /> <br />
-                  <Form.Item label="Domaine fonctionnel">
-                    <Checkbox.Group options={plainOptions} />
-                  </Form.Item>
-                </Form>
-
-
-
-                 <Row>
-                <Col offset={14}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="login-form-button"
-                    onClick={() => {
-                      window.location = "/depotPhase2";
-                    }}
-                  >
-                    Passer à l'élément suivant
-                  </Button>
-                </Col>
-              </Row>
-
-
-
-
-
-
-
-
-              export default class Phase1 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      phase: 1,
-      isChecked: "",
-      checkedItems: new Map(),
-    };
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(e) {
-    const item = e.target.name;
-    const isChecked = e.target.checked;
-    console.log(item);
-    this.setState((prevState) => ({
-      checkedItems: prevState.checkedItems.set(item, isChecked),
-    }));
-  }
-  render() {
-    const checkboxes = [
-      {
-        name: "Domaine 1",
-        key: "checkBox1",
-        label: "Domaine 1",
-      },
-      {
-        name: "Domaine 2",
-        key: "checkBox2",
-        label: "Domaine 2",
-      },
-      {
-        name: "Domaine 3",
-        key: "checkBox3",
-        label: "Domaine 3",
-      },
-      {
-        name: "Domaine 4",
-        key: "checkBox4",
-        label: "Domaine 4",
-      },
-    ];
     return (
       <div>
         <Layout>
           <Header></Header>
           <Layout>
             <Content>
-              <br />
+              <Col span={24}>
+                <Breadcrumb>
+                  <BreadcrumbItem>
+                    <Link to="/home">Home</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem active>
+                    DEPOSER MA DEMANDE ( PHASE 1 )
+                  </BreadcrumbItem>
+                </Breadcrumb>
+              </Col>
               <Row>
-                <Col span={24}>
-                  <Breadcrumb>
-                    <BreadcrumbItem>
-                      <Link to="/home">Home</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem active>DEPOSER MA DEMANDE</BreadcrumbItem>
-                  </Breadcrumb>
-                </Col>
                 <Col>
                   <StepperD phase={this.state.phase} />
                 </Col>
-                <legend>
-                  {" "}
-                  <h1>Domaine Fonctionnel</h1>
-                </legend>
-                <div style={{ textAlign: "center" }}>
-                  <React.Fragment>
-                    {checkboxes.map((item) => (
-                      <Row span={6}>
-                        <label key={item.key}>
-                          {item.name}
-                          <Checkbox
-                            name={item.name}
-                            checked={this.state.checkedItems.get(item.name)}
-                            onChange={this.handleChange}
-                          />
-                        </label>
-                      </Row>
-                    ))}
-                  </React.Fragment>
-                </div>
-                <br /> <br />
               </Row>
+              <br /> <br />
+              <Card
+                style={{
+                  width: "75%",
+                  height: "120%",
+                  position: "absolute",
+                  left: "15%",
+                  top: "50%",
+                }}
+              >
+                <CardHeader>
+                  {" "}
+                  <Col>Phase 1 : Informations sur le porteur de projet</Col>
+                </CardHeader>
+                <Form
+                  onSubmit={this.onSubmit}
+                  onChange={this.changeHandler}
+                  scrollToFirstError
+                >
+                  <CardBody className="bg-faded">
+                    <div className="row row-content">
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Nom</label>
+
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="text"
+                            name="nom"
+                            value={this.state.nom}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre Nom"
+                          />
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Prénom</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="text"
+                            name="prénom"
+                            value={this.state.prénom}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre Prénom"
+                          />
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>CIN</label>
+                          <Input
+                            required
+                            type="text"
+                            name="cin"
+                            value={this.state.cin}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre CIN "
+                          />
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Adresse</label>
+                          <Input
+                            required
+                            type="text"
+                            name="adresse"
+                            value={this.state.adresse}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre Adresse"
+                          />
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Date de Naissance</label>
+                          <br />
+                          <DatePicker
+                            required
+                            allowClear={false}
+                            type="date"
+                            Select={this.state.date_de_naissance}
+                            onChange={this.onChange}
+                            placeholder="Entrer votre Date de naissance"
+                          />
+                        </FormGroup>
+                        <FormGroup>
+                          <label>Email</label>
+                          <Input
+                            required
+                            type="text"
+                            name="email"
+                            value={this.state.email}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre Email"
+                          />
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Lieu de Naissance</label>
+                          <Input
+                            required
+                            type="text"
+                            name="lieu_de_naissance"
+                            value={this.state.lieu_de_naissance}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre Lieu de naissance"
+                          />
+                        </FormGroup>
+
+                        <FormGroup>
+                          <label>Phone</label>
+                          <Input
+                            required
+                            type="number"
+                            name="num_tel"
+                            value={this.state.num_tel}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre Numéro de tel"
+                          />
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Formation</label>
+                          <Input
+                            type="text"
+                            name="formation"
+                            value={this.state.formation}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre formation"
+                          />
+                        </FormGroup>
+
+                        <FormGroup>
+                          <label>Motivation</label>
+
+                          <textarea
+                            class="form-control"
+                            required
+                            autoComplete="off"
+                            type="text"
+                            name="motivation"
+                            value={this.state.motivation}
+                            placeholder="écrire votre motivation pour ce projet"
+                            style={{ width: "120%" }}
+                          ></textarea>
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Diplome</label>
+                          <Input
+                            type="text"
+                            name="diplome"
+                            value={this.state.diplome}
+                            onChange={this.changeHandler}
+                            placeholder="Entrer votre Diplome"
+                          />
+                        </FormGroup>
+
+                        <FormGroup>
+                          {" "}
+                          <br />
+                          <Dropdown overlay={menuSituation} required>
+                            <a className="ant-dropdown-link">
+                              <DownOutlined /> Situation Familiale
+                            </a>
+                          </Dropdown>
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Intitulé du Projet</label>
+                          <textarea
+                            class="form-control"
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="intitulé_projet"
+                            value={this.state.intitulé_projet}
+                            onChange={this.changeHandler}
+                            placeholder="Enter intitulé de votre projet"
+                            style={{ width: "120%" }}
+                          ></textarea>
+                        </FormGroup>
+                        <FormGroup>
+                          <label>Detail du Projet</label>
+                          <textarea
+                            class="form-control"
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="descriptif"
+                            value={this.state.descriptif}
+                            onChange={this.changeHandler}
+                            placeholder="Enter descriptif de votre projet"
+                            style={{ width: "175%" }}
+                          ></textarea>
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <Dropdown
+                            required
+                            overlay={
+                              <Menu onClick={this.onClickDP}> {menu}</Menu>
+                            }
+                            onVisibleChange={this.handleVisibleChange}
+                            visible={this.state.visible}
+                            // trigger={["click"]}
+                          >
+                            <a className="ant-dropdown-link">
+                              <DownOutlined /> Domaine Fonctionnel
+                            </a>
+                          </Dropdown>
+                        </FormGroup>
+                      </div>{" "}
+                    </div>
+                  </CardBody>
+                  <CardFooter style={{ textAlign: "right" }}>
+                    <Button
+                      variant="success"
+                      type="submit"
+                      className="login-form-button btn btn-success"
+                      onSubmit={this.onSubmit}
+                    >
+                      Ajouter
+                    </Button>
+                  </CardFooter>
+                </Form>
+              </Card>
             </Content>
           </Layout>
         </Layout>
@@ -418,4 +427,9 @@ const plainOptions = [
     );
   }
 }
-                */
+
+/* 
+ indeterminate:
+        !!domaine.length && domaine.length < onloadOptions.length,
+ className="border border-dark bg-dark text-white "
+ */

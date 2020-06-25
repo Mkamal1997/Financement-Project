@@ -1,228 +1,52 @@
-import React, { Component } from "react";
-import { Row, Col, Layout } from "antd";
-import {
-  Card,
-  Form,
-  Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  FormGroup,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Input,
-} from "reactstrap";
-import StepperD from "./StepperD";
+import React from "react";
+import { Form, Col } from "antd";
 import { Link } from "react-router-dom";
-import axios from "axios";
-const { Content, Header } = Layout;
+import { Breadcrumb, BreadcrumbItem } from "reactstrap";
+import StepperD from "./StepperD";
 
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 8,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 10,
-    },
-  },
-};
-export default class Phase4 extends Component {
+export default class Phase4 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lieu: "",
-      budget: "",
-      apport_personnel: "",
-      financement_sollicité: "",
-      phase: 2,
-      demandes: [],
-      demande: {},
+      isFinished: false,
+      status: {},
+      phase: 3,
     };
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onChange = this.onChange.bind(this);
   }
-  initialState = {
-    lieu: "",
-    budget: "",
-    apport_personnel: "",
-    financement_sollicité: "",
-  };
-  componentDidMount() {
-    this.getAllDemandes();
-  }
-  getAllDemandes() {
-    fetch("http://localhost:8080/api/demandes/")
-      .then((response) => response.json())
-      .then((demande) => {
-        this.setState({
-          demandes: demande,
-          isLoading: false,
-        });
-      })
-      .catch((error) => console.error("error :" + error));
-  }
-
-  onSubmit = (event) => {
-    event.preventDefault();
-    const dem = this.state.demandes.pop();
-    const demande = {
-      id_idée: dem.id_idée,
-      budget: dem.budget,
-      intitulé_projet: dem.intitulé_projet,
-      descriptif: dem.descriptif,
-      client: dem.client,
-      statut_av: "Décision",
-      lieu: this.state.lieu,
-      budget: this.state.budget,
-      apport_personnel: this.state.apport_personnel,
-      financement_sollicité: this.state.financement_sollicité,
-    };
-    axios
-      .put(`http://localhost:8080/api/demandes/${demande.id_idée}`, demande)
-      .then((response) => {
-        if (response.data != null) {
-          this.setState(this.initialState);
-          alert("Detail Saved Succesfully and Demande Updated and Saved");
-          console.log(response.data);
-          window.location = "/depotPhase5";
-        }
-      });
-  };
-  reset = () => {
-    this.setState(() => this.initialState);
-  };
-  onChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
   render() {
     return (
-      <Layout>
-        <Header></Header>
-        <Layout>
-          <Content>
-            <div>
-              <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 10 }}>
-                Phase 4 : Donner plus de details sur votre projet
-              </Col>{" "}
-              <br />
-              <Col span={24}>
-                <Breadcrumb>
-                  <BreadcrumbItem>
-                    <Link to="/home">Home</Link>
-                  </BreadcrumbItem>
-                  <BreadcrumbItem active>DETAILS SUPPLEMENTAIRE</BreadcrumbItem>
-                </Breadcrumb>
-              </Col>
-              <Col>
-                <StepperD phase={this.state.phase} />
-              </Col>
-              <Card className="border border-dark bg-dark text-white">
-                <CardHeader></CardHeader>
-                <Form
-                  onReset={this.reset}
-                  onSubmit={this.onSubmit}
-                  onChange={this.onChange}
-                >
-                  <CardBody>
-                    <Row>
-                      <Col>
-                        <FormGroup>
-                          <label>Lieu d'implantation du projet</label>
-                          <Input
-                            required
-                            autoComplete="off"
-                            type="test"
-                            name="lieu"
-                            value={this.state.lieu}
-                            onChange={this.onChange}
-                            className={"bg-dark text-white"}
-                            placeholder="Enter le lieu d'implantation de votre projet "
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <FormGroup>
-                          <label>Estimation du coût global du projet</label>
-                          <Input
-                            required
-                            autoComplete="off"
-                            type="test"
-                            name="budget"
-                            value={this.state.budget}
-                            onChange={this.onChange}
-                            className={"bg-dark text-white"}
-                            placeholder="Enter le Budget nécessaire "
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <FormGroup>
-                          <label>Apport personnel</label>
-                          <Input
-                            required
-                            autoComplete="off"
-                            type="test"
-                            name="apport_personnel"
-                            value={this.state.apport_personnel}
-                            onChange={this.onChange}
-                            className={"bg-dark text-white"}
-                            placeholder="Entrez votre Apport personnel! "
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <FormGroup>
-                          <label>Financement Sollicité</label>
-                          <Input
-                            required
-                            autoComplete="off"
-                            type="test"
-                            name="financement_sollicité"
-                            value={this.state.financement_sollicité}
-                            onChange={this.onChange}
-                            className={"bg-dark text-white"}
-                            placeholder="Entrez votre Financement Sollicité! "
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  <CardFooter style={{ textAlign: "right" }}>
-                    <Button
-                      size="sm"
-                      variant="success"
-                      type="submit"
-                      onSubmit={this.onSubmit}
-                    >
-                      ADD
-                    </Button>
-                    {"    "}
-                    <Button size="sm" variant="info" type="reset">
-                      reset
-                    </Button>
-                  </CardFooter>
-                </Form>
-              </Card>
-            </div>
-          </Content>
-        </Layout>
-      </Layout>
+      <div>
+        <Col span={24}>
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <Link to="/home">Home</Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem active>PHASE 2</BreadcrumbItem>
+          </Breadcrumb>
+        </Col>
+        <Col>
+          <StepperD phase={this.state.phase} />
+        </Col>
+        <br />
+        <br />
+        <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 10 }}>
+          Phase 4
+        </Col>
+        <br />
+        {this.state.status.statut_av == "Approuvée" ? (
+          <div>Félicitations, Votre Demande est Approuvée</div>
+        ) : (
+          <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 10 }}>
+            Veuiller attendre la décision finale du Financement
+          </Col>
+        )}
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
     );
   }
 }

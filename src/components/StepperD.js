@@ -4,17 +4,17 @@ import { Steps, Button, message } from "antd";
 const { Step } = Steps;
 
 export default class SteperD extends Component {
-    constructor(props){
-        super(props);
-        this.state={
-            current: 0,
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      current: 0,
+    };
+  }
 
   onChange = (current) => {
     this.setState({ current: this.props.phase });
   };
-  componentDidMount(){
+  componentDidMount() {
     this.onChange();
   }
 
@@ -23,7 +23,7 @@ export default class SteperD extends Component {
       <div>
         <Steps current={this.state.current} onChange={this.onChange}>
           <Step
-            title="Step 1"
+            title="1"
             description="Dépôt préliminaire"
             style={{
               padding: 24,
@@ -31,7 +31,7 @@ export default class SteperD extends Component {
             }}
           />
           <Step
-            title="Step 2"
+            title="2"
             description="Tri des demandes."
             style={{
               padding: 24,
@@ -39,7 +39,7 @@ export default class SteperD extends Component {
             }}
           />
           <Step
-            title="Step 3"
+            title="3"
             description="Donner plus de details."
             style={{
               padding: 24,
@@ -47,7 +47,7 @@ export default class SteperD extends Component {
             }}
           />
           <Step
-            title="Step 4"
+            title="4"
             description="Décision finale."
             style={{
               padding: 24,

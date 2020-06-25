@@ -1,123 +1,197 @@
 import React, { Component } from "react";
-import { Col, Layout, Button } from "antd";
-import { Breadcrumb, BreadcrumbItem } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Row, Col, Layout } from "antd";
+import {
+  Card,
+  Form,
+  Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  FormGroup,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Input,
+} from "reactstrap";
 import StepperD from "./StepperD";
-import Footer1 from "./Footer";
-import { ItalicOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import axios from "axios";
 const { Content, Header } = Layout;
-
 export default class Phase3 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFinished: false,
-      phase: 1,
-      status: {},
-      isDisabled: true,
+      lieu: "",
+      budget: "",
+      apport_personnel: "",
+      financement_sollicité: "",
+      phase: 2,
+      demandes: [],
+      demande: {},
     };
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
+  initialState = {
+    lieu: "",
+    budget: "",
+    apport_personnel: "",
+    financement_sollicité: "",
+  };
   componentDidMount() {
-    this.getDemandeStatus();
-    //this.isDisabled();
+    this.getAllDemandes();
   }
-
-  getDemandeStatus() {
-    fetch("http://localhost:8080/api/demande/1")
+  getAllDemandes() {
+    fetch("http://localhost:8080/api/demandes/")
       .then((response) => response.json())
       .then((demande) => {
-        this.setState({ status: demande });
-        console.log(this.state.status.statut_av);
+        this.setState({
+          demandes: demande,
+          isLoading: false,
+        });
       })
       .catch((error) => console.error("error :" + error));
   }
-  isDisabled = () => {
-    if (this.state.statut_av == "Tri") {
-      this.setState({ isDisabled: false });
-    }
+
+  onSubmit = (event) => {
+    event.preventDefault();
+    const dem = this.state.demandes.pop();
+    const demande = {
+      id_idée: dem.id_idée,
+      budget: dem.budget,
+      intitulé_projet: dem.intitulé_projet,
+      descriptif: dem.descriptif,
+      client: dem.client,
+      statut_av: "Décision",
+      lieu: this.state.lieu,
+      budget: this.state.budget,
+      apport_personnel: this.state.apport_personnel,
+      financement_sollicité: this.state.financement_sollicité,
+    };
+    axios
+      .put(`http://localhost:8080/api/demandes/${demande.id_idée}`, demande)
+      .then((response) => {
+        if (response.data != null) {
+          this.setState(this.initialState);
+          alert("Detail Saved Succesfully and Demande Updated and Saved");
+          console.log(response.data);
+          window.location = "/depotPhase5";
+        }
+      });
   };
-  onFinish = () => {
-    if (this.state.isFinished) {
-      this.setState({ isFinished: !this.state.isFinished });
-    }
-  };
+
+  onChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
   render() {
     return (
-      <div>
+      <Layout>
+        <Header></Header>
         <Layout>
-          <Header></Header>
-          <Layout>
-            <Content>
+          <Content>
+            <div>
+              <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 10 }}>
+                Phase 3 : Donner plus de details sur votre projet
+              </Col>{" "}
+              <br />
               <Col span={24}>
                 <Breadcrumb>
                   <BreadcrumbItem>
                     <Link to="/home">Home</Link>
                   </BreadcrumbItem>
-                  <BreadcrumbItem active>PHASE 2</BreadcrumbItem>
+                  <BreadcrumbItem active>DETAILS SUPPLEMENTAIRE</BreadcrumbItem>
                 </Breadcrumb>
               </Col>
               <Col>
                 <StepperD phase={this.state.phase} />
               </Col>
-              <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 8 }}>
-                <br />
-                <br />
-                <br />
-                <div></div>
-                
-                { this.state.status.statut_av == "Detail" ? (
-                  <div >
-                    <h2>Vous pouvez passer à l'étape suivante</h2>{" "}
-                  </div>
-                ) : (this.state.status.statut_av == "Blocké")?(
-                  <div>
-                    <div>
-                      <h2>Veuiller patienter le traiement de votre demande</h2>
+              <Card
+                style={{
+                  width: "70%",
+                  height: "90%",
+                  position: "absolute",
+                  left: "15%",
+                  top: "50%",
+                }}
+              >
+                <CardHeader></CardHeader>
+                <Form onSubmit={this.onSubmit} onChange={this.onChange}>
+                  <CardBody>
+                    <div className="row row-content">
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Lieu d'implantation du projet</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="lieu"
+                            value={this.state.lieu}
+                            onChange={this.onChange}
+                            placeholder="Enter le lieu d'implantation de votre projet "
+                          />
+                        </FormGroup>
+                      </div>{" "}
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Estimation du coût global du projet</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="budget"
+                            value={this.state.budget}
+                            onChange={this.onChange}
+                            placeholder="Enter le Budget nécessaire "
+                          />
+                        </FormGroup>
+                      </div>{" "}
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Apport personnel</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="apport_personnel"
+                            value={this.state.apport_personnel}
+                            onChange={this.onChange}
+                            placeholder="Entrez votre Apport personnel! "
+                          />
+                        </FormGroup>
+                      </div>
+                      <div className="col-12 col-sm-4 offset-sm-1">
+                        <FormGroup>
+                          <label>Financement Sollicité</label>
+                          <Input
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="financement_sollicité"
+                            value={this.state.financement_sollicité}
+                            onChange={this.onChange}
+                            placeholder="Entrez votre Financement Sollicité! "
+                          />
+                        </FormGroup>
+                      </div>
                     </div>
-                    <br />{" "}
-                    <div>
-                      {" "}
-                      <h5>
-                        étude d'éligibilité du porteur de projet / de projet
-                      </h5>
-
-                      <h5>Votre demande n'a pas pu passer la phase de</h5>
-                    </div>
-                  </div>
-                ):(this.state.status.statut_av == "Tri")}
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-              </Col>
-              <Col offset={14}>
-                <Button
-                  htmlType="submit"
-                  className="login-form-button"
-                  style={{ color: "#0ba603" }}
-                  onClick={() => {
-                    if (this.state.status.statut_av == "Detail") {
-                      window.location = "/depotPhase4";
-                    }
-                  }}
-                >
-                  Passer à l'élément suivant
-                </Button>
-              </Col>
-            </Content>
-            <Content>
-              <br />
-              <br />
-              <br />
-            </Content>
-            <Content>
-              <Footer1 />
-            </Content>
-          </Layout>
+                  </CardBody>
+                  <CardFooter style={{ textAlign: "right" }}>
+                    <Button
+                      size="sm"
+                      variant="success"
+                      type="submit"
+                      onSubmit={this.onSubmit}
+                    >
+                      Ajouter
+                    </Button>
+                  </CardFooter>
+                </Form>
+              </Card>
+            </div>
+          </Content>
         </Layout>
-      </div>
+      </Layout>
     );
   }
 }

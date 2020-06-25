@@ -8,9 +8,15 @@ import {
   Media
 } from "reactstrap";
 import { Link } from "react-router-dom";
-
+ const AGENCES = [
+  { id: 0, name: "Maroc", image: "assets/siegeBcp.png", description: "" },
+  { id: 0, name: "Maroc", image: "assets/siegeBcp.png", description: "" },
+  { id: 0, name: "Maroc", image: "assets/siegeBcp.png", description: "" },
+  { id: 0, name: "Maroc", image: "assets/siegeBcp.png", description: "" },
+  { id: 0, name: "Maroc", image: "assets/siegeBcp.png", description: "" }
+];
 function About(props) {
-  const agences = props.agences.map(agence => {
+  const agences = AGENCES.map(agence => {
     return <p>Agences {agence.name}</p>;
   });
 

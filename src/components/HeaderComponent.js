@@ -71,7 +71,7 @@ export default class Header extends Component {
                 </NavLink>
               </NavItem>
               <NavItem id="navPos">
-                <NavLink className="nav-link" to="/depot">
+                <NavLink className="nav-link" to="/depot1">
                   &nbsp; &nbsp; DEPOSER MA DAMANDE
                 </NavLink>
               </NavItem>

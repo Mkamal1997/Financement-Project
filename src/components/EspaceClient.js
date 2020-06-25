@@ -220,14 +220,6 @@ export default class EspaceClient extends Component {
                                 </Row>
                               </CardBody>
                               <CardFooter style={{ textAlign: "right" }}>
-                                <Button
-                                  size="sm"
-                                  variant="success"
-                                  type="submit"
-                                  //onClick={this.onClickModify(demande)}
-                                >
-                                  Modifier ma Demande
-                                </Button>
                                 {"    "}
                                 <Button size="sm" variant="info" type="reset">
                                   Annuler Ma demande
@@ -263,3 +255,14 @@ export default class EspaceClient extends Component {
     );
   }
 }
+
+/*
+   <Button
+                                  size="sm"
+                                  variant="success"
+                                  type="submit"
+                                  //onClick={this.onClickModify(demande)}
+                                >
+                                  Modifier ma Demande
+                                </Button>
+                                */

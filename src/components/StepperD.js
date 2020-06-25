@@ -24,7 +24,7 @@ export default class SteperD extends Component {
         <Steps current={this.state.current} onChange={this.onChange}>
           <Step
             title="Step 1"
-            description="Depot préliminaire"
+            description="Dépôt préliminaire"
             style={{
               padding: 24,
               textAlign: "center",

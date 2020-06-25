@@ -18,7 +18,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import StepperD from "./StepperD";
 import { DownOutlined } from "@ant-design/icons";
-const { Content, Header } = Layout;
+import Footer1 from "./Footer";
+const { Content, Header, Footer } = Layout;
 const { Option } = Select;
 
 export default class Phase0 extends Component {
@@ -39,6 +40,7 @@ export default class Phase0 extends Component {
       situation_familiale: "",
       isFinished: false,
       descriptif: "",
+      intitulé_projet: "",
       phase: 0,
       domaines: [],
       indeterminate: true,
@@ -67,6 +69,7 @@ export default class Phase0 extends Component {
     date_de_naissance: "",
     situation_familiale: "",
     descriptif: "",
+    intitulé_projet: "",
     domaine: "",
   };
   onSubmit = (event) => {
@@ -90,6 +93,7 @@ export default class Phase0 extends Component {
       statut_av: "Tri",
       //domaine: this.state.domaine,
       descriptif: this.state.descriptif,
+      intitulé_projet: this.state.intitulé_projet,
     };
 
     axios
@@ -103,7 +107,7 @@ export default class Phase0 extends Component {
         }
       });
   };
-
+  //
   onClickDP = ({ key }) => {
     this.setState({
       domaine: this.state.domaines[key - 1].domaine,
@@ -187,7 +191,7 @@ export default class Phase0 extends Component {
               <Card
                 style={{
                   width: "75%",
-                  height: "100%",
+                  height: "120%",
                   position: "absolute",
                   left: "15%",
                   top: "50%",
@@ -234,7 +238,6 @@ export default class Phase0 extends Component {
                           />
                         </FormGroup>
                       </div>
-
                       <div className="col-12 col-sm-4 offset-sm-1">
                         <FormGroup>
                           <label>CIN</label>
@@ -325,14 +328,17 @@ export default class Phase0 extends Component {
 
                         <FormGroup>
                           <label>Motivation</label>
-                          <Input
-                            rows={3}
-                            placeholder="écrire votre motivation pour ce projet"
+
+                          <textarea
+                            class="form-control"
+                            required
+                            autoComplete="off"
                             type="text"
                             name="motivation"
                             value={this.state.motivation}
-                            onChange={this.changeHandler}
-                          />
+                            placeholder="écrire votre motivation pour ce projet"
+                            style={{ width: "120%" }}
+                          ></textarea>
                         </FormGroup>
                       </div>
                       <div className="col-12 col-sm-4 offset-sm-1">
@@ -359,6 +365,20 @@ export default class Phase0 extends Component {
                       </div>
                       <div className="col-12 col-sm-4 offset-sm-1">
                         <FormGroup>
+                          <label>Intitulé du Projet</label>
+                          <textarea
+                            class="form-control"
+                            required
+                            autoComplete="off"
+                            type="test"
+                            name="intitulé_projet"
+                            value={this.state.intitulé_projet}
+                            onChange={this.changeHandler}
+                            placeholder="Enter intitulé de votre projet"
+                            style={{ width: "120%" }}
+                          ></textarea>
+                        </FormGroup>
+                        <FormGroup>
                           <label>Detail du Projet</label>
                           <textarea
                             class="form-control"
@@ -369,12 +389,10 @@ export default class Phase0 extends Component {
                             value={this.state.descriptif}
                             onChange={this.changeHandler}
                             placeholder="Enter descriptif de votre projet"
-                            style={{ width: "200%" }}
+                            style={{ width: "175%" }}
                           ></textarea>
                         </FormGroup>
                       </div>
-                      <div className="col-12 col-sm-4 offset-sm-1"></div>
-
                       <div className="col-12 col-sm-4 offset-sm-1">
                         <FormGroup>
                           <Dropdown
@@ -391,7 +409,7 @@ export default class Phase0 extends Component {
                             </a>
                           </Dropdown>
                         </FormGroup>
-                      </div>
+                      </div>{" "}
                     </div>
                   </CardBody>
                   <CardFooter style={{ textAlign: "right" }}>

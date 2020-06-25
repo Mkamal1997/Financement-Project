@@ -13,6 +13,7 @@ import Phase2 from "./Phase2";
 import Phase3 from "./Phase3";
 import Phase4 from "./Phase4";
 import Phase5 from "./Phase5";
+import EspaceClient from "./EspaceClient";
 import EspaceAdmin from "./EspaceAdmin";
 
 export default class Menu extends Component {
@@ -35,7 +36,8 @@ export default class Menu extends Component {
         <Route exact path="/depotPhase5" component={() => <Phase5 />} />
         <Route path="/about" component={() => <About agences={AGENCES} />} />
         <Route exact path="/espaceChargéPrésélection" component={EspaceCP} />
-        <Route exact path="/espacePersonnelCD" component={SignUp} />
+        <Route exact path="/espacePersonnelCD" component={EspaceCD} />
+        <Route exact path="/espaceClient" component={EspaceClient} />
         <Route exact path="/espacePersonnel" component={SignUp} />
         <Route exact path="/espaceAdmin" component={SignUp} />
         <Redirect to="/home" />

@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { Col, Layout, Button } from "antd";
+import { Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { Link } from "react-router-dom";
 import StepperD from "./StepperD";
+import Footer1 from "./Footer";
+import { ItalicOutlined } from "@ant-design/icons";
 const { Content, Header } = Layout;
 
 export default class Phase3 extends Component {
@@ -9,24 +13,26 @@ export default class Phase3 extends Component {
     this.state = {
       isFinished: false,
       phase: 1,
-      status: "",
+      status: {},
       isDisabled: true,
     };
   }
   componentDidMount() {
     this.getDemandeStatus();
-    this.isDisabled();
+    //this.isDisabled();
   }
+
   getDemandeStatus() {
     fetch("http://localhost:8080/api/demande/1")
       .then((response) => response.json())
       .then((demande) => {
-        this.setState({ status: demande.startut_av });
+        this.setState({ status: demande });
+        console.log(this.state.status.statut_av);
       })
       .catch((error) => console.error("error :" + error));
   }
   isDisabled = () => {
-    if (this.state.status == "Detail") {
+    if (this.state.statut_av == "Tri") {
       this.setState({ isDisabled: false });
     }
   };
@@ -42,25 +48,43 @@ export default class Phase3 extends Component {
           <Header></Header>
           <Layout>
             <Content>
+              <Col span={24}>
+                <Breadcrumb>
+                  <BreadcrumbItem>
+                    <Link to="/home">Home</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem active>PHASE 2</BreadcrumbItem>
+                </Breadcrumb>
+              </Col>
               <Col>
                 <StepperD phase={this.state.phase} />
               </Col>
-              <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 10 }}>
-                Phase 2 : Tri de la demande
+              <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 8 }}>
                 <br />
                 <br />
                 <br />
-                {this.state.status == "Detail" ? (
-                  <div>Vous pouvez passer à l'étape suivante</div>
-                ) : (
+                <div></div>
+                
+                { this.state.status.statut_av == "Detail" ? (
+                  <div >
+                    <h2>Vous pouvez passer à l'étape suivante</h2>{" "}
+                  </div>
+                ) : (this.state.status.statut_av == "Blocké")?(
                   <div>
-                    <div>Veuiller patienter le traiement de votre demande</div>
+                    <div>
+                      <h2>Veuiller patienter le traiement de votre demande</h2>
+                    </div>
                     <br />{" "}
                     <div>
-                      étude d'éligibilité du porteur de projet / de projet
+                      {" "}
+                      <h5>
+                        étude d'éligibilité du porteur de projet / de projet
+                      </h5>
+
+                      <h5>Votre demande n'a pas pu passer la phase de</h5>
                     </div>
                   </div>
-                )}
+                ):(this.state.status.statut_av == "Tri")}
                 <br />
                 <br />
                 <br />
@@ -70,11 +94,11 @@ export default class Phase3 extends Component {
               </Col>
               <Col offset={14}>
                 <Button
-                  type="primary"
                   htmlType="submit"
                   className="login-form-button"
+                  style={{ color: "#0ba603" }}
                   onClick={() => {
-                    if (this.state.status == "étape4") {
+                    if (this.state.status.statut_av == "Detail") {
                       window.location = "/depotPhase4";
                     }
                   }}
@@ -82,6 +106,14 @@ export default class Phase3 extends Component {
                   Passer à l'élément suivant
                 </Button>
               </Col>
+            </Content>
+            <Content>
+              <br />
+              <br />
+              <br />
+            </Content>
+            <Content>
+              <Footer1 />
             </Content>
           </Layout>
         </Layout>

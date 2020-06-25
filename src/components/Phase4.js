@@ -44,6 +44,8 @@ export default class Phase4 extends Component {
       apport_personnel: "",
       financement_sollicité: "",
       phase: 2,
+      demandes: [],
+      demande: {},
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -54,21 +56,43 @@ export default class Phase4 extends Component {
     apport_personnel: "",
     financement_sollicité: "",
   };
+  componentDidMount() {
+    this.getAllDemandes();
+  }
+  getAllDemandes() {
+    fetch("http://localhost:8080/api/demandes/")
+      .then((response) => response.json())
+      .then((demande) => {
+        this.setState({
+          demandes: demande,
+          isLoading: false,
+        });
+      })
+      .catch((error) => console.error("error :" + error));
+  }
 
   onSubmit = (event) => {
     event.preventDefault();
-    const detail = {
+    const dem = this.state.demandes.pop();
+    const demande = {
+      id_idée: dem.id_idée,
+      budget: dem.budget,
+      intitulé_projet: dem.intitulé_projet,
+      descriptif: dem.descriptif,
+      client: dem.client,
+      statut_av: "Décision",
       lieu: this.state.lieu,
       budget: this.state.budget,
       apport_personnel: this.state.apport_personnel,
       financement_sollicité: this.state.financement_sollicité,
     };
     axios
-      .post("http://localhost:8080/api/demandes", detail)
+      .put(`http://localhost:8080/api/demandes/${demande.id_idée}`, demande)
       .then((response) => {
         if (response.data != null) {
           this.setState(this.initialState);
-          alert("Detail Saved Succesfully");
+          alert("Detail Saved Succesfully and Demande Updated and Saved");
+          console.log(response.data);
           window.location = "/depotPhase5";
         }
       });
@@ -180,7 +204,12 @@ export default class Phase4 extends Component {
                     </Row>
                   </CardBody>
                   <CardFooter style={{ textAlign: "right" }}>
-                    <Button size="sm" variant="success" type="submit">
+                    <Button
+                      size="sm"
+                      variant="success"
+                      type="submit"
+                      onSubmit={this.onSubmit}
+                    >
                       ADD
                     </Button>
                     {"    "}

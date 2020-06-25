@@ -7,10 +7,11 @@ import {
   CardHeader,
   Table,
 } from "reactstrap";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { Row, Col, Checkbox, Layout, Collapse } from "antd";
-import axios from "axios";
-const { Content, Header, Footer } = Layout;
+import Footer1 from "./Footer";
+const { Content, Header } = Layout;
 const { Panel } = Collapse;
 const CheckboxGroup = Checkbox.Group;
 const plainOptions = [
@@ -56,8 +57,14 @@ export default class EspaceCP extends Component {
     });
   };
 
-  onClick = () => {
-    const demande = { statut_av: "Detail" };
+  onClick = (dem) => {
+    const demande = {
+      budget: dem.budget,
+      intitulé_projet: dem.intitulé_projet,
+      descriptif: dem.descriptif,
+      statut_av: "Detail",
+      client: this.state.demandes["client"],
+    };
     this.setState({ isDisabled: true });
     if (this.state.checkAll) {
       alert(
@@ -68,10 +75,11 @@ export default class EspaceCP extends Component {
           " pour l'informer"
       );
       axios
-        .put("http://localhost:8080/api/demandes/{1}", demande)
+        .put(`http://localhost:8080/api/demandes/${dem.id_idée}`, demande)
         .then((response) => {
           if (response.data != null) {
-            alert(" Updated Succesfully");
+            this.setState(this.initialState);
+            alert("Demande Updated Succesfully");
             console.log(response.data);
           }
         });
@@ -79,6 +87,17 @@ export default class EspaceCP extends Component {
       alert(
         "Un avis est envoyé au client pour lui demander de compléter ça demande"
       );
+      axios
+        .put(`http://localhost:8080/api/demandes/${dem.id_idée}`, {
+          statut_av: "Detail",
+        })
+        .then((response) => {
+          if (response.data != null) {
+            this.setState(this.initialState);
+            alert("Demande Updated Succesfully");
+            console.log(response.data);
+          }
+        });
     }
   };
   getAllDemandes() {
@@ -91,7 +110,7 @@ export default class EspaceCP extends Component {
   }
 
   /* updateDemande() {
-    fetch("http://localhost:8080/api/demandes/{1}");
+    fetch("http://localhost:8080/api/demandes/{}");
   }
   */
 
@@ -114,8 +133,8 @@ export default class EspaceCP extends Component {
 
             <Content>
               <Row>
-                <Col xs={{ span: 5, offset: 1 }} lg={{ span: 14, offset: 10 }}>
-                  Liste des demandes soumises
+                <Col xs={{ span: 5, offset: 1 }} lg={{ span: 14, offset: 8 }}>
+                  <h1>Liste des demandes soumises</h1>
                   <br />
                   <br />
                 </Col>
@@ -178,7 +197,8 @@ export default class EspaceCP extends Component {
                                   Check all
                                 </Checkbox>
                                 <button
-                                  onClick={this.onClick}
+                                  onClick={() => this.onClick(demande)}
+                                  value={demande}
                                   disabled={this.state.isDisabled}
                                 >
                                   Valider
@@ -203,9 +223,20 @@ export default class EspaceCP extends Component {
               </Row>
             </Content>
 
-            <Layout>
-              <Footer></Footer>
-            </Layout>
+            <Content>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+            </Content>
+            <Content>
+              <Footer1 />
+            </Content>
           </Layout>
         </Layout>
       </div>

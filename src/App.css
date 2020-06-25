@@ -5,7 +5,6 @@ body {
   width: 100%;
 }
 
-
 #components-layout-demo-top-side-2 {
   width: 120px;
   height: 20px;
@@ -71,10 +70,11 @@ body {
 #bot1 {
   background: #d85f0f;
   border-color: #d85f0f;
-  width: 100%;
+  width: 110%;
   font-size: 15px !important;
   letter-spacing: 2px;
   font-family: Montserrat, sans-serif;
+  
 }
 #bot1:hover {
   background-color: rgb(255, 255, 255);
@@ -129,6 +129,7 @@ body {
   padding-top: 0px;
   padding-bottom: 0px;
 }
+
 .page-section {
   background-color: rgb(238, 238, 238);
   padding: 100px 0;
@@ -251,9 +252,9 @@ address {
 }
 #proc {
   font-family: Montserrat, sans-serif;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   font-style: normal;
-  font-size: 20px;
+  font-size: 30px;
   color: #464442;
 }
 

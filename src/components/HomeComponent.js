@@ -18,18 +18,23 @@ export default function Home() {
       <Header />
 
       <Content
-        className="content3"
+        className="content3 page-section1 "
         style={{ padding: 70, margin: 0, minHeight: 280 }}
       >
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
         <Paragraph>
-          <h3 style={{ textAlign: "center" }} id="proc">
+          <h2 style={{ textAlign: "center" }} id="proc">
             En postulant votre idée sur notre plateforme, elle passera par un
             processus de sélection expliqué là-dessous. Et par rapport à des
             critères choisis par un comité , vous pouvez bénéficier d'un
             financement soit totale ou partiel, vous permettant de faire sortir
             votre idée à l'existance.
-          </h3>
-          <h1 style={{ textAlign: "center", color: "#9e4165" }}>Processus</h1>
+          </h2>
         </Paragraph>
       </Content>
 
@@ -37,6 +42,16 @@ export default function Home() {
         className="content4"
         style={{ paddingRight: 0, paddingLeft: 270, margin: 0, minHeight: 280 }}
       >
+        <Row>
+          {" "}
+          <h1 style={{ textAlign: "center", color: "#9e4165" }}>Processus</h1>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </Row>
         <Row>
           <Col offset={1} style={{ textAlign: "center" }} className="col-9">
             <div className="stp">
